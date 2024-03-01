@@ -1,15 +1,26 @@
+import mysql.connector
 from flask import Flask
 
-# 创建一个 Flask 应用程序实例
 app = Flask(__name__)
 
-# 为主页定义一个路由
+def get_db_connection():
+    connection = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='1234',
+        database='biosecurity'
+    )
+    return connection
+
 @app.route('/')
-def index():
-    return '欢迎来到生物安全指南！'
+def home():
+    db = get_db_connection()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM some_table")
+    data = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return str(data)
 
-# 根据需要定义其他路由及其对应的函数
-
-# 运行 Flask 应用程序
 if __name__ == '__main__':
     app.run(debug=True)
