@@ -1,0 +1,13 @@
+/* static/style.css */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.bg-marine {
+    background: url('/static/theme.png') no-repeat center center;
+    background-size: cover;
+}
+
+.theme-header {
+    height: 300px; /* Adjust the height as needed */
+}

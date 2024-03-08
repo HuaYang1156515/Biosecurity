@@ -1,0 +1,20 @@
+<!-- templates/staff_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head elements here -->
+    <title>Staff Dashboard</title>
+    <!-- ... -->
+</head>
+<body>
+    <div class="container">
+        <h1>Staff Dashboard</h1>
+        <!-- Include additional information and navigation relevant to the Staff role -->
+        <p>Welcome, [Staff Name]!</p>
+        <a href="{{ url_for('manage_mariners') }}" class="btn btn-secondary">Manage Mariners</a>
+        <a href="{{ url_for('manage_guide') }}" class="btn btn-primary">Manage Ocean Guide</a>
+        <!-- ... -->
+    </div>
+    <!-- ... -->
+</body>
+</html>

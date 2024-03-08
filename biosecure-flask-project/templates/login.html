@@ -1,15 +1,15 @@
-<!-- templates/registration.html -->
+<!-- templates/login.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- ... head elements ... -->
-    <title>Register</title>
+    <title>Login</title>
     <!-- ... -->
 </head>
 <body>
     <div class="container">
-        <h2>Register</h2>
-        <form method="POST" action="{{ url_for('register') }}">
+        <h2>Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" class="form-control" id="username" name="username" required>
@@ -18,13 +18,9 @@
                 <label for="password">Password:</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password:</label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
-        <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
     </div>
     <!-- ... rest of the body ... -->
 </body>
