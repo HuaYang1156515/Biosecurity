@@ -68,7 +68,6 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # 在这里您应该处理登出逻辑，比如清除会话。
     session.clear()
     flash('您已成功登出。', 'info')
     return redirect(url_for('home'))
@@ -76,7 +75,6 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # 从表单中提取数据
         username = request.form['username']
         password = request.form['password']
         # 使用您的 hash_password 函数对密码进行哈希处理
@@ -89,33 +87,102 @@ def register():
         return redirect(url_for('login'))
     return render_template('registration.html')
 
+
 #different dashboard roles
+
+from flask import session, abort, redirect, url_for
+
+def role_required(role):
+    def wrapper(fn):
+        @wraps(fn)
+        def decorated_view(*args, **kwargs):
+            if 'user_id' not in session:
+                # If there is no user_id in the session, redirect to login
+                return redirect(url_for('login'))
+            
+            user_id = session['user_id']
+            # Retrieve the role from the database based on the user_id
+            # This requires a function or a database query to get the user's role
+            user_role = get_user_role(user_id)
+            
+            if user_role is None or user_role != role:
+                # If the role does not match or there is no role found, abort with a 403 error
+                abort(403)
+            
+            return fn(*args, **kwargs)
+        return decorated_view
+    return wrapper
+
+
+
 @app.route('/dashboard')
 def dashboard():
-    # 检查用户是否已登录
-    # 如果用户角色是 'mariner'，则重定向到 mariner_dashboard
-    # 如果用户角色是 'staff'，则重定向到 staff_dashboard
-    # 如果用户角色是 'admin'，则重定向到 admin_dashboard
-    # 如果用户未登录或角色不被识别，则重定向到首页或登录页面
     return render_template('dashboard.html')
 
 @app.route('/mariner_dashboard')
 def mariner_dashboard():
-    # 检查用户是否已登录，以及他们的角色是否是 'mariner'
-    # 显示水手的仪表板，包括相关信息和选项
-    # 如果用户不是水手或未登录，则适当地重定向
     return render_template('mariner_dashboard.html')
 
 @app.route('/staff_dashboard')
 def staff_dashboard():
-    # 检查用户是否已登录，以及他们的角色是否是 'staff'
-    # 显示员工仪表板，包括查看水手档案和管理指南的选项
-    # 如果用户不是员工或未登录，则适当地重定向
     return render_template('staff_dashboard.html')
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
-    # 检查用户是否已登录，以及他们的角色是否是 'admin'
-    # 显示管理员仪表板，包括完全访问选项
-    # 如果用户不是管理员或未登录，则适当地重定向
     return render_template('admin_dashboard.html')
+
+ 
+def get_user_role(user_id):
+    connection = get_db_connection()  # Make sure this function is properly defined to open a database connection
+    try:
+        with connection.cursor() as cursor:
+            # If your users table has a field 'role' that references 'role_id' in the roles table
+            sql = "SELECT roles.role_name FROM users JOIN roles ON users.role = roles.role_id WHERE users.user_id = %s"
+            cursor.execute(sql, (user_id,))
+            result = cursor.fetchone()
+            return result['role_name'] if result else None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+    finally:
+        connection.close()
+
+#profile
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if not session.get('logged_in'):
+        # 如果用户未登录，则重定向到登录页面
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    if request.method == 'POST':
+        # 检索表单数据
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        # ... 根据需要包括其他字段
+
+        try:
+            with conn.cursor() as cursor:
+                # 更新数据库中用户的个人资料信息
+                sql = "UPDATE users SET first_name=%s, last_name=%s WHERE user_id=%s"
+                cursor.execute(sql, (first_name, last_name, user_id))
+                conn.commit()
+                flash('个人资料更新成功！', 'success')
+        except Exception as e:
+            flash(f'发生错误：{e}', 'error')
+        finally:
+            conn.close()
+
+    # 获取当前用户的个人资料信息以显示
+    user_profile = None
+    try:
+        with conn.cursor() as cursor:
+            sql = "SELECT * FROM users WHERE user_id=%s"
+            cursor.execute(sql, (user_id,))
+            user_profile = cursor.fetchone()
+    finally:
+        conn.close()
+
+    # 渲染个人资料模板，传递用户的个人资料信息
+    return render_template('profile.html', profile=user_profile)
