@@ -186,3 +186,41 @@ def profile():
 
     # 渲染个人资料模板，传递用户的个人资料信息
     return render_template('profile.html', profile=user_profile)
+
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    if request.method == 'POST':
+        current_password = request.form['current_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+
+        if new_password != confirm_password:
+            flash('New passwords do not match.', 'error')
+            return redirect(url_for('profile'))
+
+        conn = get_db_connection()
+        try:
+            with conn.cursor() as cursor:
+                # Verify current password
+                cursor.execute("SELECT password FROM users WHERE user_id=%s", (user_id,))
+                user = cursor.fetchone()
+                if not user or not check_password(current_password, user['password']):
+                    flash('Current password is incorrect.', 'error')
+                    return redirect(url_for('profile'))
+
+                # Update the password in the database
+                hashed_password = hash_password(new_password)
+                cursor.execute("UPDATE users SET password=%s WHERE user_id=%s", (hashed_password, user_id))
+                conn.commit()
+                flash('Password updated successfully.', 'success')
+        except Exception as e:
+            flash(f'An error occurred while updating the password: {e}', 'error')
+        finally:
+            conn.close()
+        return redirect(url_for('profile'))
+
+    return render_template('change_password.html')
