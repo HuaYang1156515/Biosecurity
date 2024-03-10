@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Include Bootstrap for responsive design -->
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Navigation Menu -->
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('guide') }}">Ocean Pest Guide</a></li>
+                <!-- Additional links for staff and administrators -->
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Dynamic Content Based on User Role -->
+        {% if user_role == 'mariner' %}
+            <!-- Content for Mariners -->
+        {% elif user_role == 'staff' %}
+            <!-- Content for Staff -->
+        {% elif user_role == 'admin' %}
+            <!-- Content for Administrators -->
+        {% endif %}
+
+        <!-- Profile Management Section -->
+        <!-- ... -->
+
+        <!-- Ocean Pest and Disease Guide Section -->
+        <!-- ... -->
+
+        <!-- Error Messages and Validation Feedback -->
+        <!-- ... -->
+
+    </div>
+</body>
+</html>

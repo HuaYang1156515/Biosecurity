@@ -224,3 +224,50 @@ def change_password():
         return redirect(url_for('profile'))
 
     return render_template('change_password.html')
+
+#guide.html page
+
+@app.route('/guide')
+def guide():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM ocean_guide")
+    guide_items = cursor.fetchall()
+    conn.close()
+    return render_template('guide.html', guide_items=guide_items)
+
+@app.route('/guide/<int:id>')
+def guide_detail(id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM ocean_guide WHERE id = %s", (id,))
+    item_details = cursor.fetchone()
+    conn.close()
+    return render_template('guide_detail.html', item=item_details)
+
+def get_all_pests_from_db():
+    conn = get_db_connection()  # 确保此函数连接到您的数据库
+    pests = []
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM ocean_guide")  # 根据实际表名和列调整
+            pests = cursor.fetchall()  # 检索所有记录
+    except Exception as e:
+        print(f"An error occurred while fetching pests: {e}")
+    finally:
+        conn.close()
+    return pests
+
+def get_pest_detail_from_db(pest_id):
+    conn = get_db_connection()  # 确保此函数连接到您的数据库
+    pest = None
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM ocean_guide WHERE id = %s", (pest_id,))  # 根据实际表名和列调整
+            pest = cursor.fetchone()  # 检索一条记录
+    except Exception as e:
+        print(f"An error occurred while fetching pest details: {e}")
+    finally:
+        conn.close()
+    return pest
+

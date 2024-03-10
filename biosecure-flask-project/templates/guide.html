@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ocean Pest and Disease Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Ocean Pest and Disease Guide</h1>
+    <div class="guide-list">
+        <!-- 动态创建害虫/疾病列表 -->
+        {% for pest in pests %}
+            <div class="guide-item">
+                <img src="{{ url_for('static', filename=pest.image_path) }}" alt="{{ pest.common_name }}">
+                <h2>{{ pest.common_name }}</h2>
+                <p>Present in NZ: {{ 'Yes' if pest.present_in_nz else 'No' }}</p>
+                <a href="{{ url_for('guide_detail', pest_id=pest.id) }}">Learn more</a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
