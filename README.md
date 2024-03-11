@@ -11,40 +11,35 @@ The project is structured as follows:
 - `connect.py`: Module that stores database connection parameters.
 - `biosecurity.sql`: MySQL script for creating and populating the database.
 
-## Setup and Installation
+## Setup  Installation and Run
 
-To run this application, you need Python installed on your system. The dependencies are listed in the `requirements.txt` file.
+To run this application, Python need be installed. The pip are listed in the `requirements.txt` file.
 
-1. Clone the repository to your local machine.
-2. Create a virtual environment:
-3. Activate the virtual environment:
-- On Windows:
-  ```
-  .\venv\Scripts\activate
-  ```
-- On Unix or MacOS:
-  ```
-  source venv/bin/activate
-  ```
-4. Install the required packages:
-5. Set up your MySQL database using the `biosecurity.sql` script.
+1. Clone the repository
+2. Create a virtual environment
+3. Activate the virtual environment
+4. Install the required packages
+5. Set up MySQL database using the `biosecurity.sql` script
+6. The application will be accessible at `localhost:5000` by default.
 
-## Running the Application
+## Functions
 
-To run the application:
-Or directly with python:
-
-The application will be accessible at `localhost:5000` by default.
-
-## Features
-
-- User authentication system with login and registration functionalities.
-- Role-based access control for different user roles: Mariners, Staff, and Administrators.
-- Responsive design with a marine theme.
-- CRUD operations on ocean pests and diseases.
-
-## Database Connection
-
-The `get_db_connection` function in `app.py` sets up the database connection using credentials from `connect.py`. Make sure to update `connect.py` with your database credentials.
-
-
+- `get_db_connection()`: Establishes a connection to the MySQL database 
+- `hash_password(password)`: Generates a hashed password, using salt
+- `check_password(input_password, stored_hash)`: password 
+- `home()`: homepage 
+- `login()`: user login 
+- `logout()`: user logs out 
+- `register()`: user registration 
+- `role_required(role)`: restricts access to certain views based on user role
+- `dashboard()`:view after a user logs in
+--- `mariner_dashboard()`
+--- `staff_dashboard()`
+--- `admin_dashboard()`
+- `get_user_role(user_id)`: Retrieves the role from the database based on the user's ID.
+- `profile()`:view and update profile information
+- `change_password()`: password
+- `guide()`: Displays ocean pests
+- `guide_detail(pest_id)`: detailed information 
+- `get_all_pests_from_db()`: Retrieves all pest entries from the database.
+- `get_pest_detail_from_db(pest_id)`: Fetches data 
