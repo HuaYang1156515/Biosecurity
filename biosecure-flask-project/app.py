@@ -84,7 +84,6 @@ def register():
 
 
 #different dashboard roles
-
 from flask import session, abort, redirect, url_for
 
 def role_required(role):
@@ -231,16 +230,14 @@ def guide():
 def guide_detail(pest_id):
     pest = get_pest_detail_from_db(pest_id)
     if pest:
-        # Only render the template if pest is not None
+        
         return render_template('guide_detail.html', pest=pest)
     else:
-        # Handle the case where pest is None - maybe redirect to the guide list or show a 404 not found page
         flash('Pest not found', 'error')
         return redirect(url_for('guide'))
 
 
 # Database query functions
-
 def get_all_pests_from_db():
     conn = get_db_connection()
     pests = []
