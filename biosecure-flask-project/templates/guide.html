@@ -1,21 +1,30 @@
-<!-- guide.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Ocean Pest and Disease Guide</title>
+    <!-- Include your stylesheet here -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-image: url('{{ url_for('static', filename='1ocean_theme.jpg') }}');
+            background-size:cover;
+        }
+        .container {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Ocean Pest and Disease Guide</h1>
-    <ul>
-        {% for pest in pests %}
-            <li>
-                <a href="{{ url_for('guide_detail', pest_id=pest.id) }}">{{ pest.common_name }}</a>
-            </li>
-        {% else %}
-            <p>No pests found.</p>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1>Ocean Pest and Disease Guide</h1>
+        <ul>
+            {% for pest in pests %}
+                <li><a href="{{ url_for('guide_detail', pest_id=pest.id) }}">{{ pest.common_name }}</a></li>
+            {% else %}
+                <li>No pests found.</li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>

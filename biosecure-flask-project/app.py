@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import pymysql
+import os
 from connect import dbuser, dbpass, dbhost, dbport, dbname
 from functools import wraps
 
@@ -25,7 +26,6 @@ def get_db_connection():
 if __name__ == '__main__':
     app = Flask(__name__)
     app.secret_key = 'your_secret_key_here'
-    # app configuration and route definitions
     app.run(debug=True)
 
 
@@ -36,14 +36,16 @@ from flask_hashing import Hashing
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '1234'  
 hashing = Hashing(app)
+os.environ['HASH_SALT'] = '1234'
 
 def hash_password(password):
-    
-    return hashing.hash_value(password, salt='*')  # 将 'some_salt_here' 替换为您的盐
+    salt = os.environ.get('HASH_SALT', 'fallback_salt_if_not_set')
+    return hashing.hash_value(password, salt=salt)  
 
 def check_password(input_password, stored_hash):
-     
-    return hashing.check_value(stored_hash, input_password, salt='*')  # 将 'some_salt_here' 替换为您的盐
+    salt = os.environ.get('HASH_SALT', 'fallback_salt_if_not_set')
+    return hashing.check_value(stored_hash, input_password, salt=salt)
+
 
 #home page
 @app.route('/')
@@ -237,9 +239,13 @@ def guide():
 def guide_detail(pest_id):
     pest = get_pest_detail_from_db(pest_id)
     if pest:
+        # Only render the template if pest is not None
         return render_template('guide_detail.html', pest=pest)
     else:
-        return 'Pest not found', 404
+        # Handle the case where pest is None - maybe redirect to the guide list or show a 404 not found page
+        flash('Pest not found', 'error')
+        return redirect(url_for('guide'))
+
 
 # Database query functions
 

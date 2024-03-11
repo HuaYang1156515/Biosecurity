@@ -11,3 +11,12 @@ body {
 .theme-header {
     height: 300px; /* Adjust the height as needed */
 }
+
+body {
+    background: url('../static/1ocean_theme.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.homepage {
+    background: none;
+}

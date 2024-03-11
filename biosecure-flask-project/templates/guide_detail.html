@@ -1,27 +1,40 @@
-<!-- guide_detail.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ pest.common_name }}</title>
+    <title>{{ pest.common_name }} Details</title>
+    <!-- Include your stylesheet here -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-image: url('{{ url_for('static', filename='1ocean_theme.jpg') }}');
+            background-size: cover;
+        }
+        .container {
+            padding: 20px;
+        }
+        img {
+            width: 200px;  
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ pest.common_name }} Details</h1>
-    <p><strong>Scientific Name:</strong> {{ pest.scientific_name }}</p>
-    <p><strong>Present in NZ:</strong> {{ 'Yes' if pest.is_present_in_nz else 'No' }}</p>
-    <p><strong>Key Characteristics:</strong> {{ pest.key_characteristics }}</p>
-    <p><strong>Biology Description:</strong> {{ pest.biology_description }}</p>
-    <p><strong>Threats:</strong> {{ pest.threats }}</p>
-    <p><strong>Location:</strong> {{ pest.location }}</p>
-    <p><strong>Primary Image:</strong> <img src="{{ url_for('static', filename=pest.primary_image_path) }}" alt="{{ pest.common_name }}"></p>
-    <!-- If additional_images is a string of image paths separated by some delimiter -->
-    <p><strong>Additional Images:</strong></p>
-    <ul>
-        {% for image_path in pest.additional_images.split(';') %}
-            <li><img src="{{ url_for('static', filename=image_path) }}" alt="Additional Image"></li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('guide') }}">Back to Guide</a>
+    <div class="container">
+        <h1>{{ pest.common_name }} Details</h1>
+        <p><strong>Scientific Name:</strong> {{ pest.scientific_name }}</p>
+        <p><strong>Present in NZ:</strong> {{ 'Yes' if pest.is_present_in_nz else 'No' }}</p>
+        <p><strong>Key Characteristics:</strong> {{ pest.key_characteristics }}</p>
+        <p><strong>Biology Description:</strong> {{ pest.biology_description }}</p>
+        <p><strong>Threats:</strong> {{ pest.threats }}</p>
+        <p><strong>Location:</strong> {{ pest.location }}</p>
+        <p><strong>Primary Image:</strong> <img src="{{ url_for('static', filename=pest.primary_image_path) }}" alt="{{ pest.common_name }}"></p>
+        <p><strong>Additional Images:</strong></p>
+        {% if pest.additional_images %}
+            {% for image_path in pest.additional_images.split(';') %}
+                <img src="{{ url_for('static', filename=image_path) }}" alt="{{ pest.common_name }}">
+            {% endfor %}
+        {% endif %}
+        <a href="{{ url_for('guide') }}">Back to Guide</a>
+    </div>
 </body>
 </html>
