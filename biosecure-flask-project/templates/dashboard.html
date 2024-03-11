@@ -1,41 +1,130 @@
+<!-- templates/dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Biosecurity Ocean Guide</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <!-- Include Bootstrap for responsive design -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('{{ url_for('static', filename='1ocean_theme.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .dashboard-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .content-section {
+            padding: 20px;
+            background-color: rgba(0, 123, 255, 0.7); /* Bootstrap primary color with transparency */
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
         <!-- Navigation Menu -->
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('profile') }}">Profile</a></li>
-                <li><a href="{{ url_for('guide') }}">Ocean Pest Guide</a></li>
-                <!-- Additional links for staff and administrators -->
-                <li><a href="{{ url_for('logout') }}">Logout</a></li>
-            </ul>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">Biosecurity Ocean Guide</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('guide') }}">Ocean Pest Guide</a>
+                        </li>
+                        <!-- Additional links for staff and administrators -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
 
         <!-- Dynamic Content Based on User Role -->
-        {% if user_role == 'mariner' %}
-            <!-- Content for Mariners -->
-        {% elif user_role == 'staff' %}
-            <!-- Content for Staff -->
-        {% elif user_role == 'admin' %}
-            <!-- Content for Administrators -->
-        {% endif %}
-
+        <div class="container mt-4">
+            {% if user_role == 'mariner' %}
+                <!-- Content for Mariners -->
+                <div class="content-section">
+                    <h2>Welcome, Mariner!</h2>
+                    <p>Here you can find the latest updates on marine biosecurity.</p>
+                    <!-- Additional content for mariners -->
+                </div>
+            {% elif user_role == 'staff' %}
+                <!-- Content for Staff -->
+                <div class="content-section">
+                    <h2>Staff Dashboard</h2>
+                    <p>Access staff resources and manage guide entries here.</p>
+                    <!-- Additional content for staff -->
+                </div>
+            {% elif user_role == 'admin' %}
+                <!-- Content for Administrators -->
+                <div class="content-section">
+                    <h2>Administrator Panel</h2>
+                    <p>Oversee user management and system settings.</p>
+                    <!-- Additional content for admins -->
+                </div>
+            {% endif %}
+        </div>
         <!-- Profile Management Section -->
-        <!-- ... -->
+        <div class="container mt-4">
+            <div class="content-section">
+                <h2>Profile Management</h2>
+                <p>Manage your profile details here.</p>
+                <!-- Profile form or details go here -->
+            </div>
+        </div>
 
         <!-- Ocean Pest and Disease Guide Section -->
-        <!-- ... -->
+        <div class="container mt-4">
+            <div class="content-section">
+                <h2>Ocean Pest and Disease Guide</h2>
+                <p>Explore the guide to learn about various marine pests and diseases.</p>
+                <!-- Links to guide details or search functionality -->
+            </div>
+        </div>
 
         <!-- Error Messages and Validation Feedback -->
-        <!-- ... -->
+        <div class="container mt-4">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+        </div>
 
-    </div>
-</body>
-</html>
+    </div>      
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://

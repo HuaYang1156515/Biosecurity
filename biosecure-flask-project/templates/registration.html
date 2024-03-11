@@ -2,9 +2,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ... head elements ... -->
-    <title>Register</title>
-    <!-- ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Biosecurity Ocean Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('static/1ocean_theme.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            background: rgba(0, 0, 50, 0.7); /* Dark blue background with opacity */
+            padding: 40px;
+            border-radius: 8px;
+            width: 300px;
+            margin: auto;
+            margin-top: 50px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+        }
+        .btn {
+            background-color: #0056b3; /* Blue background */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #004494; /* Darker blue on hover */
+        }
+        a {
+            color: #aad8ff; /* Light blue link */
+        }
+        a:hover {
+            color: #80bfff;
+        }
+        h2 {
+            margin-bottom: 30px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -22,10 +72,9 @@
                 <label for="confirm_password">Confirm Password:</label>
                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn">Register</button>
         </form>
         <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
     </div>
-    <!-- ... rest of the body ... -->
 </body>
 </html>

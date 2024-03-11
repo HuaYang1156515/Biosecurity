@@ -7,7 +7,7 @@ from functools import wraps
 
 def get_db_connection():
     try:
-        # Create a connection object
+       
         connection = pymysql.connect(
             host=dbhost,   
             user=dbuser,    
@@ -53,25 +53,21 @@ def home():
     return render_template('homepage.html')
 
 
-#登录和注册
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # 假设用户名和密码的表单字段分别为 'username' 和 'password'
+       
         username = request.form['username']
         password = request.form['password']
-        
-        # 在这里您通常会包含验证用户名和密码的逻辑，
-        # 比如查询数据库并检查哈希密码。
-        # ...
-
+                
         return redirect(url_for('dashboard'))
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.clear()
-    flash('您已成功登出。', 'info')
+    flash('logout', 'info')
     return redirect(url_for('home'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -79,12 +75,9 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        # 使用您的 hash_password 函数对密码进行哈希处理
+         
         hashed_password = hash_password(password)
-        
-        # 在这里您会将新用户数据插入到数据库中。
-        # ...
-
+                
         flash('Registration successful. Please log in.', 'success')
         return redirect(url_for('login'))
     return render_template('registration.html')
@@ -99,16 +92,15 @@ def role_required(role):
         @wraps(fn)
         def decorated_view(*args, **kwargs):
             if 'user_id' not in session:
-                # If there is no user_id in the session, redirect to login
+                 
                 return redirect(url_for('login'))
             
             user_id = session['user_id']
-            # Retrieve the role from the database based on the user_id
-            # This requires a function or a database query to get the user's role
+             
             user_role = get_user_role(user_id)
             
             if user_role is None or user_role != role:
-                # If the role does not match or there is no role found, abort with a 403 error
+                
                 abort(403)
             
             return fn(*args, **kwargs)
@@ -135,10 +127,10 @@ def admin_dashboard():
 
  
 def get_user_role(user_id):
-    connection = get_db_connection()  # Make sure this function is properly defined to open a database connection
+    connection = get_db_connection()   
     try:
         with connection.cursor() as cursor:
-            # If your users table has a field 'role' that references 'role_id' in the roles table
+             
             sql = "SELECT roles.role_name FROM users JOIN roles ON users.role = roles.role_id WHERE users.user_id = %s"
             cursor.execute(sql, (user_id,))
             result = cursor.fetchone()
@@ -153,30 +145,30 @@ def get_user_role(user_id):
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     if not session.get('logged_in'):
-        # 如果用户未登录，则重定向到登录页面
+         
         return redirect(url_for('login'))
 
     user_id = session['user_id']
     conn = get_db_connection()
     if request.method == 'POST':
-        # 检索表单数据
+       
         first_name = request.form['first_name']
         last_name = request.form['last_name']
-        # ... 根据需要包括其他字段
+        
 
         try:
             with conn.cursor() as cursor:
-                # 更新数据库中用户的个人资料信息
+               
                 sql = "UPDATE users SET first_name=%s, last_name=%s WHERE user_id=%s"
                 cursor.execute(sql, (first_name, last_name, user_id))
                 conn.commit()
-                flash('个人资料更新成功！', 'success')
+                flash('success', 'success')
         except Exception as e:
-            flash(f'发生错误：{e}', 'error')
+            flash(f'error{e}', 'error')
         finally:
             conn.close()
 
-    # 获取当前用户的个人资料信息以显示
+     
     user_profile = None
     try:
         with conn.cursor() as cursor:
@@ -186,7 +178,7 @@ def profile():
     finally:
         conn.close()
 
-    # 渲染个人资料模板，传递用户的个人资料信息
+     
     return render_template('profile.html', profile=user_profile)
 
 @app.route('/change_password', methods=['GET', 'POST'])
@@ -254,7 +246,7 @@ def get_all_pests_from_db():
     pests = []
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM ocean_guide")  # Adjust based on your actual table and column names
+            cursor.execute("SELECT * FROM ocean_guide")   
             pests = cursor.fetchall()
     except Exception as e:
         print(f"An error occurred while fetching pests: {e}")
