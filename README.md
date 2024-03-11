@@ -5,36 +5,28 @@ This Flask web application functions as a biosecurity guide, providing informati
 
 ## Comments
 
-## Application Functionality
-
-### Database Connection
 - `get_db_connection()`: Connects to the MySQL database using configuration from `connect.py`.
-
-### Authentication
 - `hash_password(password)`: Creates a hash of the provided password with a salt.
 - `check_password(input_password, stored_hash)`: Compares the provided password against the stored hash for authentication.
 
-### Routes
 - `home()`: Serves the home page with a marine-themed design.
 - `login()`: Manages the login process, authenticating users and redirecting to their dashboard.
 - `logout()`: Ends the user's session and redirects to the home page.
 - `register()`: Handles new user registration with password hashing and profile creation.
 
-### User Role Management
+
 - `role_required(role)`: Decorator to enforce role-based access control on routes.
 - `get_user_role(user_id)`: Retrieves the role associated with a user ID from the database.
 
-### Dashboards
+
 - `dashboard()`: Displays the general dashboard after user login.
 - `mariner_dashboard()`: Shows the dashboard for users with the Mariner role.
 - `staff_dashboard()`: Renders the Staff-specific dashboard.
 - `admin_dashboard()`: Presents the dashboard for users with the Administrator role.
 
-### User Profile
 - `profile()`: Enables users to view and update their profile information.
 - `change_password()`: Allows users to change their account password.
 
-### Ocean Guide
 - `guide()`: Lists ocean pests and diseases from the biosecurity guide.
 - `guide_detail(pest_id)`: Provides detailed information about a specific ocean pest or disease.
 - `get_all_pests_from_db()`: Fetches all pest and disease records from the database.
