@@ -1,0 +1,5 @@
+Flask
+Werkzeug
+PyMySQL
+Flask-Hashing
+python-dotenv

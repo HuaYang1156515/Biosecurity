@@ -60,7 +60,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('guide') }}">Ocean Pest Guide</a>
                         </li>
-                        <!-- Additional links for staff and administrators -->
+                         
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                         </li>
@@ -69,37 +69,37 @@
             </div>
         </nav>
 
-        <!-- Dynamic Content Based on User Role -->
+        <!--   Based on User Role -->
         <div class="container mt-4">
             {% if user_role == 'mariner' %}
                 <!-- Content for Mariners -->
                 <div class="content-section">
                     <h2>Welcome, Mariner!</h2>
                     <p>Here you can find the latest updates on marine biosecurity.</p>
-                    <!-- Additional content for mariners -->
+                     
                 </div>
             {% elif user_role == 'staff' %}
                 <!-- Content for Staff -->
                 <div class="content-section">
                     <h2>Staff Dashboard</h2>
                     <p>Access staff resources and manage guide entries here.</p>
-                    <!-- Additional content for staff -->
+                     
                 </div>
             {% elif user_role == 'admin' %}
-                <!-- Content for Administrators -->
+                <!-- Content for Admin  -->
                 <div class="content-section">
                     <h2>Administrator Panel</h2>
                     <p>Oversee user management and system settings.</p>
-                    <!-- Additional content for admins -->
+                     
                 </div>
             {% endif %}
         </div>
-        <!-- Profile Management Section -->
+        <!-- Profile Management  -->
         <div class="container mt-4">
             <div class="content-section">
                 <h2>Profile Management</h2>
                 <p>Manage your profile details here.</p>
-                <!-- Profile form or details go here -->
+                 
             </div>
         </div>
 
@@ -108,11 +108,11 @@
             <div class="content-section">
                 <h2>Ocean Pest and Disease Guide</h2>
                 <p>Explore the guide to learn about various marine pests and diseases.</p>
-                <!-- Links to guide details or search functionality -->
+                 
             </div>
         </div>
 
-        <!-- Error Messages and Validation Feedback -->
+        <!-- Error Messages   -->
         <div class="container mt-4">
             {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -126,5 +126,5 @@
         </div>
 
     </div>      
-    <!-- Bootstrap core JavaScript -->
+     
     <script src="https://

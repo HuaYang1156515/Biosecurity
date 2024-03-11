@@ -2,39 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ pest.common_name }} Details</title>
-    <!-- Include your stylesheet here -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
             background-image: url('{{ url_for('static', filename='1ocean_theme.jpg') }}');
             background-size: cover;
+            color: #f1f1f2;
         }
         .container {
+            background-color: rgba(0,0,0,0.7);  
             padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        h1, h2, p {
+            color: #17a2b8; /* Light blue for text to fit the ocean theme */
         }
         img {
-            width: 200px;  
+            width: 100%;  
+            max-width: 300px;  
+            border-radius: 10px;   
+            margin-top: 10px;
+        }
+        .back-link {
+            color: #ffc107;  
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            color: #d39e00; 
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>{{ pest.common_name }} Details</h1>
-        <p><strong>Scientific Name:</strong> {{ pest.scientific_name }}</p>
-        <p><strong>Present in NZ:</strong> {{ 'Yes' if pest.is_present_in_nz else 'No' }}</p>
-        <p><strong>Key Characteristics:</strong> {{ pest.key_characteristics }}</p>
-        <p><strong>Biology Description:</strong> {{ pest.biology_description }}</p>
-        <p><strong>Threats:</strong> {{ pest.threats }}</p>
-        <p><strong>Location:</strong> {{ pest.location }}</p>
-        <p><strong>Primary Image:</strong> <img src="{{ url_for('static', filename=pest.primary_image_path) }}" alt="{{ pest.common_name }}"></p>
-        <p><strong>Additional Images:</strong></p>
-        {% if pest.additional_images %}
-            {% for image_path in pest.additional_images.split(';') %}
-                <img src="{{ url_for('static', filename=image_path) }}" alt="{{ pest.common_name }}">
-            {% endfor %}
-        {% endif %}
-        <a href="{{ url_for('guide') }}">Back to Guide</a>
+        <h1 class="text-center">{{ pest.common_name }} Details</h1>
+        <div class="detail-section">
+            <p><strong>Scientific Name:</strong> {{ pest.scientific_name }}</p>
+            <p><strong>Present in NZ:</strong> {{ 'Yes' if pest.is_present_in_nz else 'No' }}</p>
+            <p><strong>Key Characteristics:</strong> {{ pest.key_characteristics }}</p>
+            <p><strong>Biology Description:</strong> {{ pest.biology_description }}</p>
+            <p><strong>Threats:</strong> {{ pest.threats }}</p>
+            <p><strong>Location:</strong> {{ pest.location }}</p>
+        </div>
+        <div class="image-section">
+            <h2>Images:</h2>
+            <img src="{{ url_for('static', filename=pest.primary_image_path) }}" alt="{{ pest.common_name }} primary image" class="img-fluid">
+            {% if pest.additional_images %}
+                <div class="additional-images mt-3">
+                    {% for image_path in pest.additional_images.split(';') %}
+                        <img src="{{ url_for('static', filename=image_path) }}" alt="Additional image" class="img-fluid mt-2">
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <a href="{{ url_for('guide') }}" class="back-link d-block mt-4">Back to Guide</a>
     </div>
+     
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

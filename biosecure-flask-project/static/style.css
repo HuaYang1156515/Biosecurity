@@ -1,22 +1,39 @@
 /* static/style.css */
 body {
     font-family: 'Arial', sans-serif;
+    background: url('../static/1ocean_theme.jpg') no-repeat center center fixed; /* This sets the background for the entire site */
+    background-size: cover;
+    color: #ffffff; /* Default text color set to white for better contrast */
 }
 
-.bg-marine {
-    background: url('/static/theme.png') no-repeat center center;
+.bg-marine, .theme-header {
+    background: url('/static/theme.png') no-repeat center center; /* Specific background for elements with .bg-marine or .theme-header classes */
     background-size: cover;
 }
 
 .theme-header {
-    height: 300px; /* Adjust the height as needed */
+    height: 300px;  
 }
 
-body {
-    background: url('../static/1ocean_theme.jpg') no-repeat center center fixed;
-    background-size: cover;
+.container.dashboard-container {
+    background-color: rgba(0, 0, 0, 0.75); /* Semi-transparent background for the dashboard container */
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 50px;
 }
 
-.homepage {
-    background: none;
+.dashboard-title, .welcome-message {
+    margin-bottom: 20px;
+}
+
+.dashboard-title {
+    color: #f8f9fa; /* Light white color for the dashboard title */
+}
+
+.welcome-message {
+    color: #adb5bd; /* Grey color for the welcome message */
+}
+
+.dashboard-buttons a {
+    margin-right: 10px; /* Space between buttons */
 }
