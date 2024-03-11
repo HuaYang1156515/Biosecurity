@@ -225,33 +225,31 @@ def change_password():
 
     return render_template('change_password.html')
 
-#guide.html page
+ 
 
+# Ocean Guide Routes
 @app.route('/guide')
 def guide():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM ocean_guide")
-    guide_items = cursor.fetchall()
-    conn.close()
-    return render_template('guide.html', guide_items=guide_items)
+    pests = get_all_pests_from_db()
+    return render_template('guide.html', pests=pests)
 
-@app.route('/guide/<int:id>')
-def guide_detail(id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM ocean_guide WHERE id = %s", (id,))
-    item_details = cursor.fetchone()
-    conn.close()
-    return render_template('guide_detail.html', item=item_details)
+@app.route('/guide/<int:pest_id>')
+def guide_detail(pest_id):
+    pest = get_pest_detail_from_db(pest_id)
+    if pest:
+        return render_template('guide_detail.html', pest=pest)
+    else:
+        return 'Pest not found', 404
+
+# Database query functions
 
 def get_all_pests_from_db():
-    conn = get_db_connection()  # 确保此函数连接到您的数据库
+    conn = get_db_connection()
     pests = []
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM ocean_guide")  # 根据实际表名和列调整
-            pests = cursor.fetchall()  # 检索所有记录
+            cursor.execute("SELECT * FROM ocean_guide")  # Adjust based on your actual table and column names
+            pests = cursor.fetchall()
     except Exception as e:
         print(f"An error occurred while fetching pests: {e}")
     finally:
@@ -259,15 +257,17 @@ def get_all_pests_from_db():
     return pests
 
 def get_pest_detail_from_db(pest_id):
-    conn = get_db_connection()  # 确保此函数连接到您的数据库
+    conn = get_db_connection()
     pest = None
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM ocean_guide WHERE id = %s", (pest_id,))  # 根据实际表名和列调整
-            pest = cursor.fetchone()  # 检索一条记录
+            cursor.execute("SELECT * FROM ocean_guide WHERE id = %s", (pest_id,))
+            pest = cursor.fetchone()
     except Exception as e:
         print(f"An error occurred while fetching pest details: {e}")
     finally:
         conn.close()
     return pest
 
+if __name__ == '__main__':
+    app.run(debug=True)

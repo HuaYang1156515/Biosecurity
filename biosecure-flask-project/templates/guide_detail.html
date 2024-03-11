@@ -1,27 +1,27 @@
+<!-- guide_detail.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Detail of {{ pest.common_name }}</title>
+    <title>{{ pest.common_name }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>{{ pest.common_name }}</h1>
-    <div class="guide-detail">
-        <img src="{{ url_for('static', filename=pest.primary_image_path) }}" alt="{{ pest.common_name }}">
-        <p>Scientific Name: {{ pest.scientific_name }}</p>
-        <p>Key Characteristics: {{ pest.key_characteristics }}</p>
-        <p>Description: {{ pest.description }}</p>
-        <!-- Add more details as necessary -->
-        <p>Threats: {{ pest.threats }}</p>
-        <p>Location: {{ pest.location }}</p>
-        <div class="additional-images">
-            <!-- 动态添加其他图像 -->
-            {% for image_path in pest.additional_images %}
-                <img src="{{ url_for('static', filename=image_path) }}" alt="{{ pest.common_name }}">
-            {% endfor %}
-        </div>
-    </div>
+    <h1>{{ pest.common_name }} Details</h1>
+    <p><strong>Scientific Name:</strong> {{ pest.scientific_name }}</p>
+    <p><strong>Present in NZ:</strong> {{ 'Yes' if pest.is_present_in_nz else 'No' }}</p>
+    <p><strong>Key Characteristics:</strong> {{ pest.key_characteristics }}</p>
+    <p><strong>Biology Description:</strong> {{ pest.biology_description }}</p>
+    <p><strong>Threats:</strong> {{ pest.threats }}</p>
+    <p><strong>Location:</strong> {{ pest.location }}</p>
+    <p><strong>Primary Image:</strong> <img src="{{ url_for('static', filename=pest.primary_image_path) }}" alt="{{ pest.common_name }}"></p>
+    <!-- If additional_images is a string of image paths separated by some delimiter -->
+    <p><strong>Additional Images:</strong></p>
+    <ul>
+        {% for image_path in pest.additional_images.split(';') %}
+            <li><img src="{{ url_for('static', filename=image_path) }}" alt="Additional Image"></li>
+        {% endfor %}
+    </ul>
     <a href="{{ url_for('guide') }}">Back to Guide</a>
 </body>
 </html>

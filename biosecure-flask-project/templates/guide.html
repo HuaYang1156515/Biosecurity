@@ -1,3 +1,4 @@
+<!-- guide.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,16 +8,14 @@
 </head>
 <body>
     <h1>Ocean Pest and Disease Guide</h1>
-    <div class="guide-list">
-        <!-- 动态创建害虫/疾病列表 -->
+    <ul>
         {% for pest in pests %}
-            <div class="guide-item">
-                <img src="{{ url_for('static', filename=pest.image_path) }}" alt="{{ pest.common_name }}">
-                <h2>{{ pest.common_name }}</h2>
-                <p>Present in NZ: {{ 'Yes' if pest.present_in_nz else 'No' }}</p>
-                <a href="{{ url_for('guide_detail', pest_id=pest.id) }}">Learn more</a>
-            </div>
+            <li>
+                <a href="{{ url_for('guide_detail', pest_id=pest.id) }}">{{ pest.common_name }}</a>
+            </li>
+        {% else %}
+            <p>No pests found.</p>
         {% endfor %}
-    </div>
+    </ul>
 </body>
 </html>
