@@ -8,43 +8,23 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        body {
-            background-image: url('{{ url_for('static', filename='1ocean_theme.jpg') }}');
-            background-size: cover;
-            color: #f1f1f2;
-        }
-        .container {
-            padding: 20px;
-            background-color: rgba(0,0,0,0.7);  
-            border-radius: 15px;
-            margin-top: 20px;
-        }
-        h1 {
-            color: #17a2b8;  
-            text-shadow: 2px 2px 4px #000000;
-        }
-        a {
-            color: #ffc107;  
-        }
-        a:hover {
-            color: #d39e00;  
-        }
-        ul {
-            list-style-type: none;  
-        }
-        li {
-            padding: 10px 0;  
-        }
+        /* Your existing styles */
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="text-center">Ocean Pest and Disease Guide</h1>
-        <ul>
+        <ul class="list-unstyled">
             {% for pest in pests %}
-                <li><a href="{{ url_for('guide_detail', pest_id=pest.id) }}">{{ pest.common_name }}</a></li>
+            <li class="media my-4">
+                <img src="{{ url_for('static', filename=pest.image_url) }}" class="mr-3" alt="{{ pest.common_name }}" style="width: 100px; height: auto;">
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1"><a href="{{ url_for('guide_detail', pest_id=pest.ocean_id) }}">{{ pest.common_name }}</a></h5>
+                    <!-- You can add more pest details here if you want -->
+                </div>
+            </li>
             {% else %}
-                <li>No pests found.</li>
+            <li>No pests found.</li>
             {% endfor %}
         </ul>
     </div>
