@@ -243,9 +243,8 @@ def get_all_pests_from_db():
     pests = []
     try:
         with conn.cursor() as cursor:
-            # Adjust this query to join ocean_guide with ocean_images and fetch the primary image
             cursor.execute("""
-                SELECT g.ocean_id, g.common_name, g.scientific_name, i.image_url
+                SELECT g.ocean_id, g.common_name, i.image_url AS primary_image
                 FROM ocean_guide g
                 LEFT JOIN ocean_images i ON g.ocean_id = i.ocean_id AND i.is_primary = 1
             """)   
@@ -256,28 +255,25 @@ def get_all_pests_from_db():
         conn.close()
     return pests
 
+
 def get_pest_detail_from_db(pest_id):
     conn = get_db_connection()
     pest = None
-    images = []
     try:
         with conn.cursor() as cursor:
-            # Fetch the main pest details
-            cursor.execute("SELECT * FROM ocean_guide WHERE ocean_id = %s", (pest_id,))
+            # Fetch the main pest details along with the primary image path
+            cursor.execute("""
+                SELECT g.*, i.image_url AS primary_image
+                FROM ocean_guide g
+                LEFT JOIN ocean_images i ON g.ocean_id = i.ocean_id AND i.is_primary = 1
+                WHERE g.ocean_id = %s
+            """, (pest_id,))
             pest = cursor.fetchone()
-            
-            # Fetch all images related to the pest
-            if pest:
-                cursor.execute("SELECT image_url FROM ocean_images WHERE ocean_id = %s", (pest_id,))
-                images = cursor.fetchall()
-                pest['images'] = images
-
     except Exception as e:
         print(f"An error occurred while fetching pest details: {e}")
     finally:
         conn.close()
     return pest
-
 
 if __name__ == '__main__':
     app.run(debug=True)
