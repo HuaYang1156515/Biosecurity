@@ -22,7 +22,7 @@
             {% for guide in guides %}
             <div class="col-md-4 mb-3">
                 <div class="card">
-                    <img src="{{ url_for('static', filename='images/guides/' + guide.primary_image) }}" alt="{{ guide.common_name }}" class="card-img-top guide-image">
+                    <img src="{{ url_for('static', filename=guide.primary_image) }}" alt="{{ guide.common_name }}" class="card-img-top guide-image">
                     <div class="card-body">
                         <h5 class="card-title">{{ guide.common_name }}</h5>
                         <p class="card-text">{{ guide.short_description }}</p>
