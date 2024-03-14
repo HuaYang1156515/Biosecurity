@@ -1,16 +1,24 @@
 /* static/style.css */
-body, html {
-    height: 100%;
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    background: url('../static/ocean_theme.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #ffffff;
+body {
+  background-image: url('path_to_your_ocean_theme_image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
+body {
+    background: url('/static/ocean_theme.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.ocean-theme-background {
+    background: url('/static/ocean_theme.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+  
+
 .theme-header, .bg-marine {
-    background: none; /* Remove the background from these classes if they should not have it */
-    /* If these classes should have a background image, make sure they do not overlap the body's background */
+    background: none; 
 }
 
 .theme-header {

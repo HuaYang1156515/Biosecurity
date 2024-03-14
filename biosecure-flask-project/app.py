@@ -75,17 +75,30 @@ def login():
         password = request.form['password']
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+        
+        cursor.execute('''SELECT users.user_id, users.username, users.password, roles.role_name
+                          FROM users
+                          INNER JOIN roles ON users.role_id = roles.role_id
+                          WHERE username = %s''', (username,))
         user = cursor.fetchone()
         conn.close()
+        
         if user and check_password_hash(user['password'], password):
             session['logged_in'] = True
             session['username'] = user['username']
+            session['user_role'] = user['role_name']
+            session['user_id'] = user['user_id']
+
+            # Print statement to check session contents after login
+            print("Session at login:", dict(session))
+            
             flash('You have successfully logged in.')
             return redirect(url_for('dashboard'))
         else:
             flash('Login Unsuccessful. Please check username and password')
+
     return render_template('login.html')
+
 
 
 
@@ -132,6 +145,7 @@ def register():
 
 @app.route('/logout')
 def logout():
+    print("Logging out user:", session.get('username'))
     session.pop('logged_in', None)
     session.pop('username', None)
     flash('You have successfully logged out.')
@@ -140,89 +154,185 @@ def logout():
 
 
 
+"""@app.route('/dashboard')
+@login_required
+def dashboard():
+    user_role = session.get('user_role')
+    user_id = session.get('user_id')
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # For the mariner role, fetch from mariner_profiles and render mariner_dashboard
+    if user_role == 'Mariner':
+        cursor.execute("SELECT * FROM mariner_profiles WHERE user_id = %s", (user_id,))
+        profile_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return render_template('mariner_dashboard.html', profile=profile_data)
+
+    # For staff or administrator roles, fetch from staff_admin_profiles and render the appropriate dashboard
+    elif user_role in ['Staff', 'Administrator']:
+        cursor.execute("SELECT * FROM staff_admin_profiles WHERE user_id = %s", (user_id,))
+        profile_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if user_role == 'Staff':
+            return render_template('staff_dashboard.html', profile=profile_data)
+        else: # user_role == 'Administrator'
+            return render_template('admin_dashboard.html', profile=profile_data)
+    
+    else:
+        # If role is not recognized, redirect to a default page or logout
+        cursor.close()
+        conn.close()
+        flash('Unrecognized user role.')
+        return redirect(url_for('logout'))"""
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    print("Session at dashboard:", dict(session))
+    
+    # Convert the role to lowercase for case-insensitive comparison
+    user_role = session.get('user_role', '').lower()  # Will handle None by converting it to an empty string
+    user_id = session.get('user_id')
+    
+    if user_role not in ['mariner', 'staff', 'administrator']:
+        print("Unrecognized role, redirecting to logout.")
+        return redirect(url_for('logout'))
+    
+    # If role is recognized, fetch data and render dashboard
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        if user_role == 'mariner':
+            cursor.execute("SELECT * FROM mariner_profiles WHERE user_id = %s", (user_id,))
+            profile_data = cursor.fetchone()
+            return render_template('mariner_dashboard.html', profile=profile_data)
+        elif user_role == 'staff':
+            cursor.execute("SELECT * FROM staff_admin_profiles WHERE user_id = %s", (user_id,))
+            profile_data = cursor.fetchone()
+            return render_template('staff_dashboard.html', profile=profile_data)
+        elif user_role == 'administrator':
+            cursor.execute("SELECT * FROM staff_admin_profiles WHERE user_id = %s", (user_id,))
+            profile_data = cursor.fetchone()
+            return render_template('admin_dashboard.html', profile=profile_data)
+    except Exception as e:
+        print(f"Error fetching dashboard data: {e}")
+        return redirect(url_for('logout'))
+    finally:
+        cursor.close()
+        conn.close()
+
 #profile
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     user_id = session.get('user_id')
-    user_role = session.get('user_role')
-    
+    user_role = session.get('user_role', '').capitalize()  # Ensure first letter is uppercase to match role names
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    if user_role == 'Mariner':
-        profile_table = 'mariner_profiles'
-    elif user_role in ['Staff', 'Administrator']:
-        profile_table = 'staff_admin_profiles'
-    else:
-        flash('Invalid user role.')
-        return redirect(url_for('home'))
-
     if request.method == 'POST':
-        
+        # Assume you have form fields for first_name, last_name, email, and phone_number
         first_name = request.form['first_name']
         last_name = request.form['last_name']
-        # More fields and validation as needed
-        # Update profile logic here using `profile_table` and form data
-        pass
-    else:
-        # Fetch profile data
-        cursor.execute(f"SELECT * FROM {profile_table} WHERE user_id = %s", (user_id,))
+        email = request.form['email']
+        phone_number = request.form['phone_number']
+
+        try:
+            # Update the user profile information.
+            # You will need separate UPDATE statements for mariner_profiles and staff_admin_profiles based on user_role.
+            if user_role == 'Mariner':
+                cursor.execute('''UPDATE mariner_profiles SET first_name=%s, last_name=%s, email=%s, phone_number=%s 
+                                  WHERE user_id=%s''',
+                               (first_name, last_name, email, phone_number, user_id))
+            else:
+                cursor.execute('''UPDATE staff_admin_profiles SET first_name=%s, last_name=%s, email=%s, phone_number=%s 
+                                  WHERE user_id=%s''',
+                               (first_name, last_name, email, phone_number, user_id))
+            conn.commit()
+            flash('Profile updated successfully!')
+        except Exception as e:
+            conn.rollback()
+            flash(f'Error updating profile: {e}')
+
+    # Regardless of whether the request is GET or POST, display the current profile data
+    try:
+        if user_role == 'Mariner':
+            cursor.execute("SELECT * FROM mariner_profiles WHERE user_id = %s", (user_id,))
+        else:
+            cursor.execute("SELECT * FROM staff_admin_profiles WHERE user_id = %s", (user_id,))
+
         profile_data = cursor.fetchone()
-        
-        cursor.close()
-        conn.close()
-        return render_template('profile.html', profile=profile_data, role=user_role)
+    except Exception as e:
+        flash(f'Error fetching profile data: {e}')
+        profile_data = {}
+
+    cursor.close()
+    conn.close()
+
+    return render_template('profile.html', profile=profile_data, role=user_role)
 
 
-
-
-
-
-#dashboard
-@app.route('/dashboard')
+#change_password
+@app.route('/change_password', methods=['GET', 'POST'])
 @login_required
-def dashboard():
-    # Fetch user role from session or database
-    user_role = session.get('user_role')
-    
-    # Decide which dashboard to present based on the user's role
-    if user_role == 'Mariner':
-        return render_template('mariner_dashboard.html')
-    elif user_role == 'Staff':
-        return render_template('staff_dashboard.html')
-    elif user_role == 'Administrator':
-        return render_template('admin_dashboard.html')
-    else:
-        # If role is not recognized, redirect to a default page or logout
-        flash('Unrecognized user role.')
-        return redirect(url_for('logout'))
-    
+def change_password():
+    if request.method == 'POST':
+        current_password = request.form['current_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        user_id = session.get('user_id')
 
-#different roles dashboard
-  #mariner_dashboard
-@app.route('/mariner_dashboard')
-@login_required
-def mariner_dashboard():
-    # Perform actions specific to mariner users
-    return render_template('mariner_dashboard.html')
- 
-    
+        # Check if new passwords match
+        if new_password != confirm_password:
+            flash('New passwords do not match.')
+            return redirect(url_for('change_password'))
+
+        # Connect to the database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Check the current password
+        cursor.execute('SELECT password FROM users WHERE user_id = %s', (user_id,))
+        user = cursor.fetchone()
+
+        if user and check_password_hash(user['password'], current_password):
+            # Hash the new password
+            hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
+
+            # Update the password in the database
+            try:
+                cursor.execute('UPDATE users SET password = %s WHERE user_id = %s', 
+                               (hashed_password, user_id))
+                conn.commit()
+                flash('Your password has been updated.')
+            except Exception as e:
+                conn.rollback()
+                flash(f'Error updating password: {e}')
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            flash('Current password is incorrect.')
+
+    return render_template('change_password.html')
 
 
-@app.route('/staff_dashboard')
-@login_required
-@staff_required  # This is a placeholder for your role-check decorator
-def staff_dashboard():
-    # Perform actions specific to staff users
-    return render_template('staff_dashboard.html')
+
+
+
+
 
   # manage  
 @app.route('/manage_mariners')
 @login_required
 @staff_required  # Make sure only staff can access this
 def manage_mariners():
-    # Fetch mariner profiles from the database
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM mariner_profiles')
@@ -321,80 +431,3 @@ def guide_detail(ocean_id):
 if __name__ == '__main__':
     app.run(debug=True)
 
-
-
-
-
-"""
-#profile
- 
-
-
-@app.route('/change_password', methods=['GET', 'POST'])
-def change_password():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-
-    user_id = session['user_id']
-    if request.method == 'POST':
-        current_password = request.form['current_password']
-        new_password = request.form['new_password']
-        confirm_password = request.form['confirm_password']
-
-        if new_password != confirm_password:
-            flash('New passwords do not match.', 'error')
-            return redirect(url_for('profile'))
-
-        conn = get_db_connection()
-        try:
-            with conn.cursor() as cursor:
-                # Verify current password
-                cursor.execute("SELECT password FROM users WHERE user_id=%s", (user_id,))
-                user = cursor.fetchone()
-                if not user or not check_password(current_password, user['password']):
-                    flash('Current password is incorrect.', 'error')
-                    return redirect(url_for('profile'))
-
-                # Update the password in the database
-                hashed_password = hash_password(new_password)
-                cursor.execute("UPDATE users SET password=%s WHERE user_id=%s", (hashed_password, user_id))
-                conn.commit()
-                flash('Password updated successfully.', 'success')
-        except Exception as e:
-            flash(f'An error occurred while updating the password: {e}', 'error')
-        finally:
-            conn.close()
-        return redirect(url_for('profile'))
-
-    return render_template('change_password.html')
-
- 
-
-
-
-# Database query functions
-def get_all_pests_from_db():
-    conn = get_db_connection()
-    pests = []
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("""
-"""                SELECT g.ocean_id, g.common_name, i.image_url AS primary_image
-                FROM ocean_guide g
-                LEFT JOIN ocean_images i ON g.ocean_id = i.ocean_id AND i.is_primary = 1
-            """   
-"""            pests = cursor.fetchall()
-    except Exception as e:
-        print(f"An error occurred while fetching pests: {e}")
-    finally:
-        conn.close()
-    return pests
-
-
-def get_pest_detail_from_db(pest_id):
-    conn = get_db_connection()
-    pest = None
-    try:
-        with conn.cursor() as cursor:
-            # Fetch the main pest details along with the primary image path
-            cursor.execute("""
