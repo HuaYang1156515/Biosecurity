@@ -1,0 +1,30 @@
+<!-- manage_guide.html -->
+{% extends 'base.html' %} <!-- If you have a base layout -->
+{% block content %}
+<div class="container mt-5">
+    <h1>Manage Ocean Guide</h1>
+    <!-- Table to display ocean guide entries -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Common Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for guide in guides %}
+            <tr>
+                <td>{{ guide.ocean_id }}</td>
+                <td>{{ guide.common_name }}</td>
+                <td>
+                    <a href="{{ url_for('edit_guide', ocean_id=guide.ocean_id) }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ url_for('delete_guide', ocean_id=guide.ocean_id) }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('add_guide') }}" class="btn btn-success">Add New Entry</a>
+</div>
+{% endblock %}

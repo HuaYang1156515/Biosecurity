@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
-     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Link to custom stylesheet for additional styling -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="bg-ocean-theme">
     <div class="container dashboard-container">
         <h1 class="dashboard-title">Admin Dashboard</h1>
-        <p class="welcome-message">Welcome, [Admin Name]!</p>
+        <p class="welcome-message">Welcome, {{ session['admin_name'] | default('Administrator') }}!</p>
         <div class="dashboard-buttons">
+            <!-- Make sure these URL endpoints exist in your Flask application -->
             <a href="{{ url_for('manage_users') }}" class="btn btn-warning">Manage All Users</a>
             <a href="{{ url_for('full_guide_control') }}" class="btn btn-danger">Full Control of Ocean Guide</a>
+            <a href="{{ url_for('profile') }}" class="btn btn-info">View Profile</a>
+            <!-- Include other links as necessary -->
         </div>
     </div>
-     
+
+    <!-- JavaScript and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

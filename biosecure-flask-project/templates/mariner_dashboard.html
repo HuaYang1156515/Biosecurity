@@ -5,16 +5,19 @@
     <title>Mariner Dashboard</title>
      
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Link to custom stylesheet for additional styling -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="bg-ocean-theme">
     <div class="container dashboard-container">
         <h1 class="dashboard-title">Mariner Dashboard</h1>
-        <p class="welcome-message">Welcome, [Mariner's Name]!</p>
+        <!-- Use session or passed variable for Mariner's Name -->
+        <p class="welcome-message">Welcome, {{ session['username'] | default('Mariner') }}!</p>
         <div class="dashboard-buttons">
-            <a href="{{ url_for('view_profile') }}" class="btn btn-info">View Profile</a>
-            <a href="{{ url_for('view_guide') }}" class="btn btn-primary">View Ocean Guide</a>
+            <!-- Correct the url_for() to the appropriate endpoints -->
+            <a href="{{ url_for('profile') }}" class="btn btn-info">View Profile</a>
+            <a href="{{ url_for('guide') }}" class="btn btn-primary">View Ocean Guide</a>
+            <!-- Link to change password if you have a separate page for it -->
+            <a href="{{ url_for('change_password') }}" class="btn btn-warning">Change Password</a>
         </div>
     </div>
      

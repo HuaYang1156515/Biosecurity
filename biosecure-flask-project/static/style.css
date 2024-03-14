@@ -1,22 +1,29 @@
 /* static/style.css */
-body {
+body, html {
+    height: 100%;
+    margin: 0;
     font-family: 'Arial', sans-serif;
-    background: url('../static/1ocean_theme.jpg') no-repeat center center fixed;  
+    background: url('../static/ocean_theme.jpg') no-repeat center center fixed;
     background-size: cover;
-    color: #ffffff;  
+    color: #ffffff;
 }
 
-.bg-marine, .theme-header {
-    background: url('/static/theme.png') no-repeat center center;  
-    background-size: cover;
+.theme-header, .bg-marine {
+    background: none; /* Remove the background from these classes if they should not have it */
+    /* If these classes should have a background image, make sure they do not overlap the body's background */
 }
 
 .theme-header {
-    height: 300px;  
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
 }
 
 .container.dashboard-container {
-    background-color: rgba(0, 0, 0, 0.75); 
+    background-color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
     padding: 20px;
     border-radius: 10px;
     margin-top: 50px;
@@ -27,13 +34,14 @@ body {
 }
 
 .dashboard-title {
-    color: #f8f9fa; 
+    color: #f8f9fa;
 }
 
 .welcome-message {
-    color: #adb5bd;  
+    color: #adb5bd;
 }
 
 .dashboard-buttons a {
     margin-right: 10px; /* Space between buttons */
 }
+

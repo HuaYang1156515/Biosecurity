@@ -7,26 +7,24 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        /* Your existing styles */
-    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center">Ocean Pest and Disease Guide</h1>
-        <ul class="list-unstyled">
-            {% for pest in pests %}
-            <li class="media my-4">
-                <img src="{{ url_for('static', filename=pest.image_url) }}" class="mr-3" alt="{{ pest.common_name }}" style="width: 100px; height: auto;">
-                <div class="media-body">
-                    <h5 class="mt-0 mb-1"><a href="{{ url_for('guide_detail', pest_id=pest.ocean_id) }}">{{ pest.common_name }}</a></h5>
-                    <!-- You can add more pest details here if you want -->
+        <h1 class="text-center my-4">Ocean Pest and Disease Guide</h1>
+        <div class="list-group">
+            {% for guide in guides %}
+            <a href="{{ url_for('guide_detail', ocean_id=guide.ocean_id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ guide.common_name }}</h5>
+                    <small>{{ 'Present in NZ' if guide.present_in_nz else 'Not present in NZ' }}</small>
                 </div>
-            </li>
+                <p class="mb-1">{{ guide.short_description }}</p>
+                <img src="{{ url_for('static', filename='images/guides/' + guide.primary_image) }}" alt="{{ guide.common_name }}" class="img-fluid">
+            </a>
             {% else %}
-            <li>No pests found.</li>
+            <p>No pests or diseases found.</p>
             {% endfor %}
-        </ul>
+        </div>
     </div>
     <!-- Optional JavaScript and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Full Guide Control</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-ocean-theme">
+    <div class="container dashboard-container">
+        <h1 class="dashboard-title">Full Control of Ocean Guide</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Common Name</th>
+                            <th scope="col">Scientific Name</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for guide in guides %}
+                        <tr>
+                            <th scope="row">{{ guide.ocean_id }}</th>
+                            <td>{{ guide.common_name }}</td>
+                            <td>{{ guide.scientific_name }}</td>
+                            <td>{{ 'Present' if guide.present_in_nz else 'Not Present' }}</td>
+                            <td>
+                                <a href="{{ url_for('edit_guide', ocean_id=guide.ocean_id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="{{ url_for('delete_guide', ocean_id=guide.ocean_id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No guide entries found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{{ url_for('add_guide') }}" class="btn btn-success">Add New Entry</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Add any JavaScript needed for your page here
+    </script>
+</body>
+</html>

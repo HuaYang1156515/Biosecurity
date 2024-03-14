@@ -3,29 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ pest.common_name }} Details</title>
+    <title>{{ guide_detail.common_name }} Details</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        /* Your existing styles */
-    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center">{{ pest.common_name }} Details</h1>
-        <div class="detail-section">
-            <!-- Your pest details here -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">{{ guide_detail.common_name }} Details</h1>
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/guides/' + guide_detail.primary_image) }}" alt="{{ guide_detail.common_name }} primary image" class="img-fluid">
+            </div>
+            <div class="col-lg-6">
+                <h2>Description:</h2>
+                <p>{{ guide_detail.biology_description }}</p>
+                <h2>Details:</h2>
+                <ul>
+                    <li>Scientific Name: {{ guide_detail.scientific_name }}</li>
+                    <li>Key Characteristics: {{ guide_detail.key_characteristics }}</li>
+                    <li>Threats: {{ guide_detail.threats }}</li>
+                    <li>Location: {{ guide_detail.location }}</li>
+                    <!-- More details can be added here -->
+                </ul>
+            </div>
         </div>
         <div class="image-section">
-            <h2>Images:</h2>
-            <img src="{{ url_for('static', filename=pest.primary_image) }}" alt="{{ pest.common_name }} primary image" class="img-fluid">
-            <!-- If there are additional images -->
-            {% for image in pest.images %}
-                <img src="{{ url_for('static', filename=image.image_url) }}" alt="{{ pest.common_name }} additional image" class="img-fluid mt-2">
-            {% endfor %}
+            <h2>Additional Images:</h2>
+            <div class="row">
+                {% for image in guide_detail.images %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <img src="{{ url_for('static', filename='images/guides/' + image.image_url) }}" alt="{{ guide_detail.common_name }} additional image" class="img-fluid">
+                </div>
+                {% endfor %}
+            </div>
         </div>
-        <a href="{{ url_for('guide') }}" class="back-link d-block mt-4">Back to Guide</a>
+        <a href="{{ url_for('guide') }}" class="btn btn-secondary mt-4">Back to Guide</a>
     </div>
     <!-- JavaScript and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

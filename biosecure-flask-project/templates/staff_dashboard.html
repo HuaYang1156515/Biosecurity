@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Staff Dashboard</title>
-     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-     
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="bg-ocean-theme">
     <div class="container dashboard-container">
         <h1 class="dashboard-title">Staff Dashboard</h1>
-        <p class="welcome-message">Welcome, [Staff Name]!</p>
+        <p class="welcome-message">Welcome, {{ session['staff_name'] | default('Staff Member') }}!</p>
         <div class="dashboard-buttons">
+            <!-- Make sure these URL endpoints exist in your Flask application -->
             <a href="{{ url_for('manage_mariners') }}" class="btn btn-secondary">Manage Mariners</a>
             <a href="{{ url_for('manage_guide') }}" class="btn btn-primary">Manage Ocean Guide</a>
+            <a href="{{ url_for('profile') }}" class="btn btn-info">View Profile</a>
+            <!-- Include other links as necessary -->
         </div>
     </div>
-     
+
+    <!-- JavaScript and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
