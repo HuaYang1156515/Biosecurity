@@ -90,7 +90,7 @@ def login():
 
 
 
-# Route for user registration
+ 
 # Route for user registration
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -159,7 +159,7 @@ def profile():
         return redirect(url_for('home'))
 
     if request.method == 'POST':
-        # Assume you have form fields for first_name and last_name
+        
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         # More fields and validation as needed

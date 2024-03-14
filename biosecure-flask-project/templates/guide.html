@@ -6,29 +6,42 @@
     <title>Ocean Pest and Disease Guide</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .guide-image {
+            max-height: 200px; /* Fixed height for consistency */
+            object-fit: cover; /* Ensures the image covers the area nicely */
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center my-4">Ocean Pest and Disease Guide</h1>
-        <div class="list-group">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Ocean Pest and Disease Guide</h1>
+        <div class="row">
             {% for guide in guides %}
-            <a href="{{ url_for('guide_detail', ocean_id=guide.ocean_id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ guide.common_name }}</h5>
-                    <small>{{ 'Present in NZ' if guide.present_in_nz else 'Not present in NZ' }}</small>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='images/guides/' + guide.primary_image) }}" alt="{{ guide.common_name }}" class="card-img-top guide-image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ guide.common_name }}</h5>
+                        <p class="card-text">{{ guide.short_description }}</p>
+                        <a href="{{ url_for('guide_detail', ocean_id=guide.ocean_id) }}" class="btn btn-primary">Learn More</a>
+                        <p class="card-text"><small class="text-muted">{{ 'Present in NZ' if guide.present_in_nz else 'Not present in NZ' }}</small></p>
+                    </div>
                 </div>
-                <p class="mb-1">{{ guide.short_description }}</p>
-                <img src="{{ url_for('static', filename='images/guides/' + guide.primary_image) }}" alt="{{ guide.common_name }}" class="img-fluid">
-            </a>
+            </div>
             {% else %}
-            <p>No pests or diseases found.</p>
+            <div class="col-12">
+                <p>No pests or diseases found.</p>
+            </div>
             {% endfor %}
         </div>
     </div>
-    <!-- Optional JavaScript and Bootstrap JS -->
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
