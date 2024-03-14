@@ -35,8 +35,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-app = Flask(__name__)
-app.secret_key = os.urandom(24)
 
 
 
@@ -59,6 +57,9 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 
 # Route for the homepage
@@ -136,8 +137,7 @@ def logout():
     flash('You have successfully logged out.')
     return redirect(url_for('home'))
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
 
 
 #profile
@@ -179,7 +179,6 @@ def profile():
 
 
 
-
 #dashboard
 @app.route('/dashboard')
 @login_required
@@ -200,8 +199,6 @@ def dashboard():
         return redirect(url_for('logout'))
     
 
-
-
 #different roles dashboard
   #mariner_dashboard
 @app.route('/mariner_dashboard')
@@ -210,8 +207,7 @@ def mariner_dashboard():
     # Perform actions specific to mariner users
     return render_template('mariner_dashboard.html')
  
-     
-
+    
 
 
 @app.route('/staff_dashboard')
@@ -289,10 +285,9 @@ def full_guide_control():
     return render_template('full_guide_control.html', guides=guides)
 
 
+
+
 # ocean guide
- 
- 
-#guide 
 @app.route('/guide')
 def guide():
    
@@ -321,6 +316,15 @@ def guide_detail(ocean_id):
 
     return render_template('guide_detail.html', guide_detail=guide_detail)
  
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+
 """
 #profile
  
