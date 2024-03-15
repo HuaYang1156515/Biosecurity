@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 import pymysql
 import os
-import re  # Import regular expressions for password validation
+import re   
 from connect import dbuser, dbpass, dbhost, dbport, dbname
 from functools import wraps
 
@@ -154,55 +154,20 @@ def logout():
 
 
 
-"""@app.route('/dashboard')
-@login_required
-def dashboard():
-    user_role = session.get('user_role')
-    user_id = session.get('user_id')
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    # For the mariner role, fetch from mariner_profiles and render mariner_dashboard
-    if user_role == 'Mariner':
-        cursor.execute("SELECT * FROM mariner_profiles WHERE user_id = %s", (user_id,))
-        profile_data = cursor.fetchone()
-        cursor.close()
-        conn.close()
-        return render_template('mariner_dashboard.html', profile=profile_data)
-
-    # For staff or administrator roles, fetch from staff_admin_profiles and render the appropriate dashboard
-    elif user_role in ['Staff', 'Administrator']:
-        cursor.execute("SELECT * FROM staff_admin_profiles WHERE user_id = %s", (user_id,))
-        profile_data = cursor.fetchone()
-        cursor.close()
-        conn.close()
-        if user_role == 'Staff':
-            return render_template('staff_dashboard.html', profile=profile_data)
-        else: # user_role == 'Administrator'
-            return render_template('admin_dashboard.html', profile=profile_data)
-    
-    else:
-        # If role is not recognized, redirect to a default page or logout
-        cursor.close()
-        conn.close()
-        flash('Unrecognized user role.')
-        return redirect(url_for('logout'))"""
-
 @app.route('/dashboard')
 @login_required
 def dashboard():
     print("Session at dashboard:", dict(session))
     
     # Convert the role to lowercase for case-insensitive comparison
-    user_role = session.get('user_role', '').lower()  # Will handle None by converting it to an empty string
+    user_role = session.get('user_role', '').lower()   
     user_id = session.get('user_id')
     
     if user_role not in ['mariner', 'staff', 'administrator']:
         print("Unrecognized role, redirecting to logout.")
         return redirect(url_for('logout'))
     
-    # If role is recognized, fetch data and render dashboard
+     
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -231,21 +196,20 @@ def dashboard():
 @login_required
 def profile():
     user_id = session.get('user_id')
-    user_role = session.get('user_role', '').capitalize()  # Ensure first letter is uppercase to match role names
+    user_role = session.get('user_role', '').capitalize()   
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
     if request.method == 'POST':
-        # Assume you have form fields for first_name, last_name, email, and phone_number
+         
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
         phone_number = request.form['phone_number']
 
         try:
-            # Update the user profile information.
-            # You will need separate UPDATE statements for mariner_profiles and staff_admin_profiles based on user_role.
+             
             if user_role == 'Mariner':
                 cursor.execute('''UPDATE mariner_profiles SET first_name=%s, last_name=%s, email=%s, phone_number=%s 
                                   WHERE user_id=%s''',
@@ -260,7 +224,7 @@ def profile():
             conn.rollback()
             flash(f'Error updating profile: {e}')
 
-    # Regardless of whether the request is GET or POST, display the current profile data
+
     try:
         if user_role == 'Mariner':
             cursor.execute("SELECT * FROM mariner_profiles WHERE user_id = %s", (user_id,))
@@ -293,7 +257,7 @@ def change_password():
             flash('New passwords do not match.')
             return redirect(url_for('change_password'))
 
-        # Connect to the database
+       
         conn = get_db_connection()
         cursor = conn.cursor()
 
@@ -302,10 +266,10 @@ def change_password():
         user = cursor.fetchone()
 
         if user and check_password_hash(user['password'], current_password):
-            # Hash the new password
+             
             hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
 
-            # Update the password in the database
+             
             try:
                 cursor.execute('UPDATE users SET password = %s WHERE user_id = %s', 
                                (hashed_password, user_id))
@@ -324,14 +288,10 @@ def change_password():
 
 
 
-
-
-
-
   # manage  
 @app.route('/manage_mariners')
 @login_required
-@staff_required  # Make sure only staff can access this
+@staff_required   
 def manage_mariners():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -344,9 +304,9 @@ def manage_mariners():
   #manage_guide
 @app.route('/manage_guide')
 @login_required
-@staff_required  # This should be a role-check decorator for staff
+@staff_required   
 def manage_guide():
-    # Fetch ocean guide entries from the database
+     
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM ocean_guide')
@@ -360,18 +320,16 @@ def manage_guide():
 
 @app.route('/admin_dashboard')
 @login_required
-@admin_required  # This is a placeholder for your role-check decorator
+@admin_required   
 def admin_dashboard():
-    # Perform actions specific to admin users
+     
     return render_template('admin_dashboard.html')
-   
-   
-   #manage_users
+       
 @app.route('/manage_users')
 @login_required
-@admin_required  # This should be a role-check decorator for admins
+@admin_required   
 def manage_users():
-    # Fetch all user profiles from the database
+     
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM users')
@@ -383,9 +341,9 @@ def manage_users():
   #full_guide_control
 @app.route('/full_guide_control')
 @login_required
-@admin_required  # This should be a role-check decorator for admins
+@admin_required  
 def full_guide_control():
-    # Similar to manage_guide, but may include additional privileges
+     
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM ocean_guide')
@@ -411,7 +369,7 @@ def guide():
 
 @app.route('/guide/<int:ocean_id>')
 def guide_detail(ocean_id):
-    # Fetch the specific guide entry from the database
+     
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM ocean_guide WHERE ocean_id = %s', (ocean_id,))

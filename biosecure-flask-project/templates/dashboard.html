@@ -1,10 +1,9 @@
-<!-- templates/dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <div class="navigation">
         <a href="/" class="btn btn-secondary">Home</a>
-        <!-- Other navigation links -->
+         
     </div>
        
     <meta charset="UTF-8">
@@ -41,7 +40,7 @@
         }
         .content-section {
             padding: 20px;
-            background-color: rgba(0, 123, 255, 0.7); /* Bootstrap primary color with transparency */
+            background-color: rgba(0, 123, 255, 0.7);  
             margin: 20px;
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -53,7 +52,7 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Navigation Menu -->
+         
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="#">Biosecurity Ocean Guide</a>
@@ -77,7 +76,7 @@
             </div>
         </nav>
 
-        <!--   Based on User Role -->
+         
         <div class="container mt-4">
             {% if user_role == 'mariner' %}
                 <!-- Content for Mariners -->

@@ -10,13 +10,13 @@
 <body class="bg-ocean-theme">
     <div class="container dashboard-container">
         <h1 class="dashboard-title">Mariner Dashboard</h1>
-        <!-- Use session or passed variable for Mariner's Name -->
+         
         <p class="welcome-message">Welcome, {{ session['username'] | default('Mariner') }}!</p>
         <div class="dashboard-buttons">
-            <!-- Correct the url_for() to the appropriate endpoints -->
+             
             <a href="{{ url_for('profile') }}" class="btn btn-info">View Profile</a>
             <a href="{{ url_for('guide') }}" class="btn btn-primary">View Ocean Guide</a>
-            <!-- Link to change password if you have a separate page for it -->
+             
             <a href="{{ url_for('change_password') }}" class="btn btn-warning">Change Password</a>
         </div>
     </div>

@@ -11,11 +11,11 @@
         <h1 class="dashboard-title">Admin Dashboard</h1>
         <p class="welcome-message">Welcome, {{ session['admin_name'] | default('Administrator') }}!</p>
         <div class="dashboard-buttons">
-            <!-- Make sure these URL endpoints exist in your Flask application -->
+             
             <a href="{{ url_for('manage_users') }}" class="btn btn-warning">Manage All Users</a>
             <a href="{{ url_for('full_guide_control') }}" class="btn btn-danger">Full Control of Ocean Guide</a>
             <a href="{{ url_for('profile') }}" class="btn btn-info">View Profile</a>
-            <!-- Include other links as necessary -->
+             
         </div>
     </div>
 

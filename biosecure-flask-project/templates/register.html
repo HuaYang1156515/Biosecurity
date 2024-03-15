@@ -1,4 +1,4 @@
-<!-- templates/registration.html -->
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +57,7 @@
         }
     </style>
     <script>
-        // Client-side password validation
+         
         function validatePassword() {
             var password = document.getElementById("password");
             var confirm_password = document.getElementById("confirm_password");
@@ -65,16 +65,16 @@
             if(password.value != confirm_password.value) {
                 confirm_password.setCustomValidity("Passwords don't match.");
             } else {
-                // Reset custom validity message
+                 
                 confirm_password.setCustomValidity('');
             }
 
-            // Password strength validation
+             
             var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
             if (!passwordPattern.test(password.value)) {
                 password.setCustomValidity("Password must be at least 8 characters long with a mix of uppercase and lowercase letters and numbers.");
             } else {
-                // Reset custom validity message
+                 
                 password.setCustomValidity('');
             }
         }
